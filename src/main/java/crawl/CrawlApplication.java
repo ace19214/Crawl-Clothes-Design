@@ -7,7 +7,12 @@ import org.jsoup.select.Elements;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,11 +25,11 @@ public class CrawlApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CrawlApplication.class, args);
-        crawlShirt();
-
+        String path = "/Users/thanhpm/Desktop/image_test";
+        crawlShirt(path);
     }
 
-    private synchronized static void crawlShirt() {
+    private synchronized static void crawlShirt(String path) {
         List<String> linkCrawl = new ArrayList<>();
         linkCrawl.add("StarWars");
         linkCrawl.add("marvel");
@@ -82,11 +87,46 @@ public class CrawlApplication {
                     Matcher matcher = pattern.matcher(innerImgSrc);
                     if (matcher.find()) {
                         System.out.println("Image : " + innerImgSrc);
+                        downloadImage(innerImgSrc, path);
                         count++;
                     }
                 }
                 System.out.println("COUNT = " +count);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void downloadImage(String strImageURL, String path) {
+        //get file name from image path
+        String strImageName =
+                strImageURL.substring( strImageURL.lastIndexOf("/") + 1 );
+
+        System.out.println("Saving: " + strImageName + ", from: " + strImageURL);
+
+        try {
+            //open the stream from URL
+            URLConnection openConnection = new URL(strImageURL).openConnection();
+            openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+            InputStream in = openConnection.getInputStream();
+
+            byte[] buffer = new byte[4096];
+            int n = -1;
+
+            OutputStream os =
+                    new FileOutputStream( path + "/" + strImageName );
+
+            //write bytes to the output stream
+            while ( (n = in.read(buffer)) != -1 ){
+                os.write(buffer, 0, n);
+            }
+
+            //close the stream
+            os.close();
+
+            System.out.println("Image saved");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
