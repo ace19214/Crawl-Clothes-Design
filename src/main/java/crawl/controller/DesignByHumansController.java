@@ -15,9 +15,9 @@ public class DesignByHumansController {
     private DesignByHumansService designByHumansService;
 
     @GetMapping("/crawl")
-    public String getAllImage(@RequestParam String path) {
+    public String getAllImage(@RequestParam String path, @RequestParam int from, @RequestParam int to) {
         try {
-            designByHumansService.crawlShirt(path);
+            designByHumansService.crawlShirt(path, from, to);
             return "Success";
         } catch (Exception e){
             return "Error " + e.getMessage();
