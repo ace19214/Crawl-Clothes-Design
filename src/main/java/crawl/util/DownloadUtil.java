@@ -12,19 +12,21 @@ import java.net.URLConnection;
 @Component
 public class DownloadUtil {
 
-    public static void downloadImage(String strImageURL, String path) {
+    public static void downloadImage(String strImageURL, String path, String nameImage) {
         //get file name from image path
-        String strImageName =
+        String fileType =
                 strImageURL.substring(strImageURL.lastIndexOf("/") + 1);
+        fileType = fileType.substring(fileType.lastIndexOf("."));
         try {
             //open the stream from URL
+            System.out.println(nameImage+fileType);
             URLConnection openConnection = new URL(strImageURL).openConnection();
             openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
             InputStream in = openConnection.getInputStream();
             byte[] buffer = new byte[4096];
             int n = -1;
             OutputStream os =
-                    new FileOutputStream(path + "/" + strImageName);
+                    new FileOutputStream(path + "/" + nameImage + fileType);
 
             //write bytes to the output stream
             while ((n = in.read(buffer)) != -1) {

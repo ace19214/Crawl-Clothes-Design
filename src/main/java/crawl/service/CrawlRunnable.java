@@ -19,6 +19,7 @@ public class CrawlRunnable implements Runnable {
     @Override
     public void run() {
         String innerImgSrc = innerLink.attr("src");
+        String imageName = innerLink.attr("alt");
 
         if (!(innerImgSrc.contains("designbyhumans") && innerImgSrc.contains(".png"))) {
             innerImgSrc = innerLink.attr("data-src");
@@ -27,7 +28,7 @@ public class CrawlRunnable implements Runnable {
         Pattern pattern = Pattern.compile("(png)$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(innerImgSrc);
         if (matcher.find()) {
-            DownloadUtil.downloadImage(innerImgSrc, path);
+            DownloadUtil.downloadImage(innerImgSrc, path, imageName);
         }
     }
 }
