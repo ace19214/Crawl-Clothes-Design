@@ -19,7 +19,6 @@ public class DownloadUtil {
         fileType = fileType.substring(fileType.lastIndexOf("."));
         try {
             //open the stream from URL
-            System.out.println(nameImage+fileType);
             URLConnection openConnection = new URL(strImageURL).openConnection();
             openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
             InputStream in = openConnection.getInputStream();
